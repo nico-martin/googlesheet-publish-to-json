@@ -17,8 +17,8 @@ if ( ! array_key_exists('key', $_GET)) {
 
 require_once './GoogleSpreadsheetToArray.php';
 $sheet = new NicoMartin\GoogleSpreadsheetToArray($_GET['key']);
-if (array_key_exists('sheetid', $_GET)) {
-	$sheet->setSheetId(intval($_GET['sheetid']));
+if (array_key_exists('table', $_GET)) {
+	$sheet->setTableId(intval($_GET['table']));
 }
 if (array_key_exists('nocache', $_GET) && $_GET['nocache'] === 'true') {
 	$sheet->setCacheTime(0);

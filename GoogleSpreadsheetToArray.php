@@ -5,7 +5,7 @@ namespace NicoMartin;
 class GoogleSpreadsheetToArray
 {
 	private $url = '';
-	private $sheetId = 0;
+	private $tableId = 0;
 	private $sheetKey = false;
 
 	private $cacheDir = '';
@@ -29,9 +29,9 @@ class GoogleSpreadsheetToArray
 	 * Setters
 	 */
 
-	public function setSheetId($id)
+	public function setTableId($id)
 	{
-		$this->sheetId = intval($id);
+		$this->tableId = intval($id);
 		$this->updateUrl();
 	}
 
@@ -57,7 +57,7 @@ class GoogleSpreadsheetToArray
 
 	public function updateUrl()
 	{
-		$this->url = 'https://docs.google.com/spreadsheets/d/e/' . $this->sheetKey . '/pub?gid=' . $this->sheetId . '&single=true&output=tsv';
+		$this->url = 'https://docs.google.com/spreadsheets/d/e/' . $this->sheetKey . '/pub?gid=' . $this->tableId . '&single=true&output=tsv';
 	}
 
 	/**
