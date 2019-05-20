@@ -67,7 +67,7 @@ class GoogleSpreadsheetToArray
 	public function getArray()
 	{
 
-		$cacheFile = $this->cacheDir . $this->sheetKey . '-' . $this->sheetId . '.json';
+		$cacheFile = "{$this->cacheDir}{$this->sheetKey}-{$this->tableId}-{$this->rowAsKey}-{$this->colAsKey}-{$this->keySwitch}.json";
 		if (file_exists($cacheFile) && filemtime($cacheFile) >= time() - $this->cacheTime) {
 			return json_decode(file_get_contents($cacheFile));
 		}
