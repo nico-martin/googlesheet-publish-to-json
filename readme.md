@@ -29,8 +29,8 @@ $array = $sheet->getArray();
 ```
 
 ### Setters
-* `setTableId({int})`: If the Spreadsheet has multiple tables you can pass the requested table
-* `setFirstColAsKey(bool $boolean)`: Use the first Column of the Spreadsheet as a JSON/Array Key
-* `setFirstRowAsKey(bool $boolean)`: Use the first Row of the Spreadsheet as a JSON/Array Key
-* `setKeySwitch(bool $boolean)`: Switch Up the Array so it uses the Row as the first level array instead of the Col
-* `setCacheTime({time in sec})`: Set the Cachetime (defaults to 600 - 10 Minutes)
+* `$sheet->setTableId({int})`: If the Spreadsheet has multiple tables you can pass the requested table
+* `$sheet->setFirstColAsKey(bool $boolean)`: Use the first Column of the Spreadsheet as a JSON/Array Key
+* `$sheet->setFirstRowAsKey(bool $boolean)`: Use the first Row of the Spreadsheet as a JSON/Array Key
+* `$sheet->setKeySwitch(bool $boolean)`: Switch Up the Array so it uses the Row as the first level array instead of the Col
+* `$sheet->setCacheTime({time in sec})`: Set the Cachetime (defaults to 600 - 10 Minutes)
