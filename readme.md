@@ -1,6 +1,6 @@
 # GoogleSheet Publish to JSON
 
-A simple, ready to use Tool to parse a "Publish to web" Google Spreadsheet and return ist as JSON.
+A simple, ready to use PHP-based Tool to parse a "Publish to web" Google Spreadsheet and return ist as JSON.
 
 ## Example
 I have a google sheet for some of my past talks and now I'd like to get this as a JSON.
