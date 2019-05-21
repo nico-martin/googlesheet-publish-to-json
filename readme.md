@@ -3,18 +3,24 @@
 A simple, ready to use Tool to parse a "Publish to web" Google Spreadsheet and return ist as JSON.
 
 ## Example
-I have a google Sheet for some of my past talks:  
+I have a google sheet for some of my past talks and now I'd like to get this as a JSON.
+```
 https://docs.google.com/spreadsheets/d/1trRcmLTu0Ey_bbyg5vWWVOYqjXnzG_ScVw1IzdUOx5o/edit?usp=sharing
+```
 
-Now I'd like to get this from an API. The "File" -> "Publish to web" looks like this:  
+The "File" -> "Publish to web" looks like this:  
+```
 https://docs.google.com/spreadsheets/d/e/2PACX-1vSNjZItcRIaqBeN8xIBQNjphBUqgBEOo149_bUjFMLOGsByT0LXqaBF3C-zN44ThrDeEdB5Q_bJsW5B/pub?gid=0&single=true&output=csv
+```
 
-The Sheet key in this case is `2PACX-1vSNjZItcRIaqBeN8xIBQNjphBUqgBEOo149_bUjFMLOGsByT0LXqaBF3C-zN44ThrDeEdB5Q_bJsW5B`.
+The sheet key in this case is:
+```
+2PACX-1vSNjZItcRIaqBeN8xIBQNjphBUqgBEOo149_bUjFMLOGsByT0LXqaBF3C-zN44ThrDeEdB5Q_bJsW5B
+```
 
 So in my demo installation I can use the following link to have a JSON endpoint:
-```
-https://google-sheets.nico.dev/2PACX-1vSNjZItcRIaqBeN8xIBQNjphBUqgBEOo149_bUjFMLOGsByT0LXqaBF3C-zN44ThrDeEdB5Q_bJsW5B/
-```
+
+https://google-sheets.nico.dev/2PACX-1vSNjZItcRIaqBeN8xIBQNjphBUqgBEOo149_bUjFMLOGsByT0LXqaBF3C-zN44ThrDeEdB5Q_bJsW5B/?row=true
 
 ## Params
 * `table={int}`: If the Spreadsheet has multiple tables you can pass the requested table
