@@ -22,6 +22,8 @@ So in my demo installation I can use the following link to have a JSON endpoint:
 
 https://google-sheets.nico.dev/2PACX-1vSNjZItcRIaqBeN8xIBQNjphBUqgBEOo149_bUjFMLOGsByT0LXqaBF3C-zN44ThrDeEdB5Q_bJsW5B/?row=true
 
+Feel free to play around with the params 😃
+
 ## Params
 * `table={int}`: If the Spreadsheet has multiple tables you can pass the requested table
 * `col=true`: Use the first Column of the Spreadsheet as a JSON/Array Key
