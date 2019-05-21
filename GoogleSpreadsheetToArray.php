@@ -7,6 +7,7 @@ class GoogleSpreadsheetToArray
 	private $url = '';
 	private $tableId = 0;
 	private $sheetKey = false;
+	private $allowedKeys = [];
 
 	private $cacheDir = '';
 	private $cacheTime = 60 * 10; // 10 Minutes
@@ -55,6 +56,17 @@ class GoogleSpreadsheetToArray
 		$this->keySwitch = $boolean;
 	}
 
+	public function setAllowedKeys($keys)
+	{
+		if (is_string($keys)) {
+			$this->allowedKeys[] = $keys;
+		} elseif (is_array($keys)) {
+			foreach ($keys as $key) {
+				$this->allowedKeys[] = $key;
+			}
+		}
+	}
+
 	public function updateUrl()
 	{
 		$this->url = 'https://docs.google.com/spreadsheets/d/e/' . $this->sheetKey . '/pub?gid=' . $this->tableId . '&single=true&output=tsv';
@@ -66,6 +78,9 @@ class GoogleSpreadsheetToArray
 
 	public function getArray()
 	{
+		if ( ! empty($this->allowedKeys) && ! in_array($this->sheetKey, $this->allowedKeys)) {
+			return false;
+		}
 
 		$cacheFile = "{$this->cacheDir}{$this->sheetKey}-{$this->tableId}-{$this->rowAsKey}-{$this->colAsKey}-{$this->keySwitch}.json";
 		if (file_exists($cacheFile) && filemtime($cacheFile) >= time() - $this->cacheTime) {
@@ -74,8 +89,6 @@ class GoogleSpreadsheetToArray
 
 		$data = $this->remoteGet($this->url);
 		if ( ! $data) {
-			http_response_code(500);
-
 			return false;
 		}
 		$parsed = $this->parse($data);

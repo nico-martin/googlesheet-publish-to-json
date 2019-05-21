@@ -34,3 +34,4 @@ $array = $sheet->getArray();
 * `$sheet->setFirstRowAsKey(bool $boolean)`: Use the first Row of the Spreadsheet as a JSON/Array Key
 * `$sheet->setKeySwitch(bool $boolean)`: Switch Up the Array so it uses the Row as the first level array instead of the Col
 * `$sheet->setCacheTime({time in sec})`: Set the Cachetime (defaults to 600 - 10 Minutes)
+* `$sheet->setAllowedKeys({keys})`: Limit the allowed keys. Can be one key or an array or keys

@@ -14,7 +14,6 @@ if ( ! array_key_exists('key', $_GET)) {
 	die();
 }
 
-
 require_once './GoogleSpreadsheetToArray.php';
 $sheet = new NicoMartin\GoogleSpreadsheetToArray($_GET['key']);
 if (array_key_exists('table', $_GET)) {
@@ -32,5 +31,14 @@ if (array_key_exists('col', $_GET) && $_GET['col'] === 'true') {
 if (array_key_exists('switch', $_GET) && $_GET['switch'] === 'true') {
 	$sheet->setKeySwitch(true);
 }
-echo json_encode($sheet->getArray());
+
+$array = $sheet->getArray();
+if ($array === false) {
+	http_response_code(500);
+	$array = [
+		'error' => 'Sheet could not be parsed',
+	];
+}
+
+echo json_encode($array);
 die();
