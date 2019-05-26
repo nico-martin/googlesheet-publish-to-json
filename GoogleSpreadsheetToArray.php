@@ -117,7 +117,7 @@ class GoogleSpreadsheetToArray
 
 		$rowI = 0;
 		foreach ($rows as $rowIndex => $row) {
-			$elements = array_map([$this, 'sanitizeKey'], explode("\t", $row));
+			$elements = explode("\t", $row);
 			$rowKey   = $rowI;
 			if ($this->colAsKey) {
 				$rowKey = $firstCol[$rowI];
