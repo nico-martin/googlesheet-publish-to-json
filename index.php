@@ -32,6 +32,16 @@ if (array_key_exists('switch', $_GET) && $_GET['switch'] === 'true') {
 	$sheet->setKeySwitch(true);
 }
 
+if (array_key_exists('filter-col', $_GET)) {
+	$cols = explode(',', $_GET['filter-col']);
+	foreach ($cols as $col) {
+		$parts = explode('|', $col);
+		$col   = $parts[0];
+		unset($parts[0]);
+		$sheet->setFilterCol($col, $parts);
+	}
+}
+
 $array = $sheet->getArray();
 if ($array === false) {
 	http_response_code(500);

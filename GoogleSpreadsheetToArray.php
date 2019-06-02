@@ -16,6 +16,8 @@ class GoogleSpreadsheetToArray
 	private $colAsKey = false;
 	private $keySwitch = false;
 
+	private $filter = [];
+
 	public function __construct($key)
 	{
 		$this->sheetKey = $key;
@@ -67,9 +69,14 @@ class GoogleSpreadsheetToArray
 		}
 	}
 
+	public function setFilterCol(string $col, array $filters)
+	{
+		$this->filter['col'][$col] = $filters;
+	}
+
 	public function updateUrl()
 	{
-		$this->url = 'https://docs.google.com/spreadsheets/d/e/' . $this->sheetKey . '/pub?gid=' . $this->tableId . '&single=true&output=tsv';
+		$this->url = 'https://docs.google.com/spreadsheets/d/e/' . $this->sheetKey . '/pub?gid=' . $this->tableId . '&single=true&output=csv';
 	}
 
 	/**
@@ -82,16 +89,23 @@ class GoogleSpreadsheetToArray
 			return false;
 		}
 
-		$cacheFile = "{$this->cacheDir}{$this->sheetKey}-{$this->tableId}-{$this->rowAsKey}-{$this->colAsKey}-{$this->keySwitch}.json";
+		$filter = md5(json_encode($this->filter));
+
+		$cacheFile = "{$this->cacheDir}{$this->sheetKey}-{$this->tableId}-{$this->rowAsKey}-{$this->colAsKey}-{$this->keySwitch}-{$filter}.json";
 		if (file_exists($cacheFile) && filemtime($cacheFile) >= time() - $this->cacheTime) {
 			return json_decode(file_get_contents($cacheFile));
 		}
 
 		$data = $this->remoteGet($this->url);
-		if ( ! $data) {
-			return false;
-		}
+		//echo substr(json_encode((string)$data), 1, -1);
+		/*
+		echo '<pre>';
+		print_r(str_getcsv($data));
+		echo '</pre>';
+		die();
+		*/
 		$parsed = $this->parse($data);
+
 		file_put_contents($cacheFile, json_encode($parsed));
 
 		return $parsed;
@@ -105,34 +119,41 @@ class GoogleSpreadsheetToArray
 	{
 		$rows       = explode("\r\n", $data);
 		$full_array = [];
-		$firstRow   = $this->makeArrayValsUnique(array_map([$this, 'sanitizeKey'], explode("\t", $rows[0])));
+		$firstRow   = $this->makeArrayValsUnique(array_map([$this, 'sanitizeKey'], str_getcsv($rows[0])));
 		$firstCol   = [];
 		foreach ($rows as $row) {
-			$firstCol[] = explode("\t", $row)[0];
+			$firstCol[] = str_getcsv($row)[0];
 		}
 		$firstCol = $this->makeArrayValsUnique(array_map([$this, 'sanitizeKey'], $firstCol));
-		if ($this->rowAsKey) {
-			unset($rows[0]);
-		}
 
 		$rowI = 0;
 		foreach ($rows as $rowIndex => $row) {
-			$elements = explode("\t", $row);
+			$elements = str_getcsv($row);
 			$rowKey   = $rowI;
 			if ($this->colAsKey) {
 				$rowKey = $firstCol[$rowI];
-				unset($elements[0]);
 			}
 			foreach ($elements as $colIndex => $element) {
 				$colKey = ($this->rowAsKey ? $firstRow[$colIndex] : $colIndex);
 				if ($this->keySwitch) {
-					$full_array[$colKey][$rowKey] = $element;
+					$full_array[$colKey][$rowKey] = $this->mayBeDoFilter('col', $colKey, $this->mayBeDoFilter('row', $rowKey, $element));
 				} else {
-					$full_array[$rowKey][$colKey] = $element;
+					$full_array[$rowKey][$colKey] = $this->mayBeDoFilter('row', $rowKey, $this->mayBeDoFilter('col', $colKey, $element));
 				}
 			}
 
 			$rowI++;
+		}
+
+		$first_key = array_keys($full_array)[0];
+		if ( ! is_int($first_key)) {
+			unset($full_array[$first_key]);
+		}
+		foreach ($full_array as $key => $array) {
+			$first_key = array_keys($array)[0];
+			if ( ! is_int($first_key)) {
+				unset($full_array[$key][$first_key]);
+			}
 		}
 
 		return $full_array;
@@ -145,19 +166,11 @@ class GoogleSpreadsheetToArray
 
 	public function sanitizeKey($string)
 	{
-		$string = trim($string);
-		$string = strtolower($string);
-		$string = str_replace([' ', '_', '/', '\\', '.'], '-', $string);
+		require_once './helpers/Filter.php';
+		$filtered = new Filter($string);
+		$filtered->filter('key');
 
-		$string = str_replace('ä', 'ae', $string);
-		$string = str_replace('ö', 'oe', $string);
-		$string = str_replace('ü', 'ue', $string);
-
-		$string = preg_replace("/[^a-z0-9-]/", '', $string);
-		$string = preg_replace("/(-{2,})/", '-', $string); // replace multiple - with one
-		$string = preg_replace("/(^-|-$)/", '', $string); // remove - from start and end
-
-		return $string;
+		return $filtered->getContent();
 	}
 
 	public function makeArrayValsUnique($array)
@@ -178,5 +191,25 @@ class GoogleSpreadsheetToArray
 		}
 
 		return $newArray;
+	}
+
+	public function mayBeDoFilter($type, $key, $content)
+	{
+		if ( ! array_key_exists($type, $this->filter)) {
+			return $content;
+		}
+
+		if ( ! array_key_exists($key, $this->filter[$type])) {
+			return $content;
+		}
+
+		require_once './helpers/Filter.php';
+		$filtered = new Filter($content);
+
+		foreach ($this->filter[$type][$key] as $filter) {
+			$filtered->filter($filter);
+		}
+
+		return $filtered->getContent();
 	}
 }
