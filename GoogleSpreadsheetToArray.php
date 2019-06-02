@@ -145,14 +145,23 @@ class GoogleSpreadsheetToArray
 			$rowI++;
 		}
 
-		$first_key = array_keys($full_array)[0];
-		if ( ! is_int($first_key)) {
-			unset($full_array[$first_key]);
+		if ($this->rowAsKey) {
+			if ($this->keySwitch) {
+				foreach ($full_array as $key => $array) {
+					array_shift($full_array[$key]);
+				}
+			} else {
+				array_shift($full_array);
+			}
 		}
-		foreach ($full_array as $key => $array) {
-			$first_key = array_keys($array)[0];
-			if ( ! is_int($first_key)) {
-				unset($full_array[$key][$first_key]);
+
+		if ($this->colAsKey) {
+			if ($this->keySwitch) {
+				array_shift($full_array);
+			} else {
+				foreach ($full_array as $key => $array) {
+					array_shift($full_array[$key]);
+				}
 			}
 		}
 
