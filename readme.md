@@ -30,6 +30,9 @@ Feel free to play around with the params 😃
 * `row=true`: Use the first Row of the Spreadsheet as a JSON/Array Key
 * `switch=true`: Switch Up the Array so it uses the Row as the first level array instead of the Col
 * `nocache=true`: Bypass the cache (sets the cachetime to 0)
+* `reverse=true`: Reverse the sort order of the entries
+* `filter-col={col}|{filter},{col2}|{filter},..`: Add filter(s) to one ore multiple columns
+* `filter-row={row}|{filter}|{filter2},{row2}|{filter},..`: Add filter(s) to one ore multiple rows
 
 ## Class GoogleSpreadsheetToArray
 ### Simple example
@@ -48,3 +51,29 @@ $array = $sheet->getArray();
 * `$sheet->setKeySwitch(bool $boolean)`: Switch Up the Array so it uses the Row as the first level array instead of the Col
 * `$sheet->setCacheTime({time in sec})`: Set the Cachetime (defaults to 600 - 10 Minutes)
 * `$sheet->setAllowedKeys({keys})`: Limit the allowed keys. Can be one key or an array or keys
+* `$sheet->reverseEntries(bool $boolean)`: Reverse the sort order of the entries
+* `$sheet->setFilter(string $type = '{col|row}', string $key, array $filters)`: Set filter(s) to a rows or columns
+
+### Filter
+GoogleSheet Publish to JSON allows you to add filters to the values.
+
+Let's say we have the following Table:
+
+| Col1 | Col2 | Integer | Col4 | Col5 |
+|---|---|---|---|---|
+| Lorem | Ipsum | 1.5 | sit | amet |
+| consetetur | sed | 2 | nonumy | eirmod |
+
+Now we need to filter the "Integer"-Colum to make sure it only returns integers:
+
+```php
+$sheet->setFirstRowAsKey(true); // Sets the first row as JSON Key
+$sheet->setFilter('col', 'integer', [ 'intval' ]); // filters the column with the key "integer" by using the "inval();" function
+```
+
+#### Available filters
+
+* md2html - converts markdown to html
+* [intval](https://www.php.net/manual/en/function.intval.php) - convert to an integer
+* [floatval](https://www.php.net/manual/en/function.floatval.php) - convert to a float
+* [boolval](https://www.php.net/manual/en/function.boolval.php) - convert to boolean

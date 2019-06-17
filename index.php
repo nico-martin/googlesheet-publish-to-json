@@ -31,14 +31,25 @@ if (array_key_exists('col', $_GET) && $_GET['col'] === 'true') {
 if (array_key_exists('switch', $_GET) && $_GET['switch'] === 'true') {
 	$sheet->setKeySwitch(true);
 }
+if (array_key_exists('reverse', $_GET) && $_GET['reverse'] === 'true') {
+	$sheet->setReverseEntries(true);
+}
 
+$filterGet = [];
 if (array_key_exists('filter-col', $_GET)) {
-	$cols = explode(',', $_GET['filter-col']);
+	$filterGet[] = 'col';
+}
+if (array_key_exists('filter-row', $_GET)) {
+	$filterGet[] = 'row';
+}
+
+foreach ($filterGet as $key) {
+	$cols = explode(',', $_GET["filter-{$key}"]);
 	foreach ($cols as $col) {
 		$parts = explode('|', $col);
 		$col   = $parts[0];
 		unset($parts[0]);
-		$sheet->setFilterCol($col, $parts);
+		$sheet->setFilter($key, $col, $parts);
 	}
 }
 

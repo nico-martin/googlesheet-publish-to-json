@@ -15,6 +15,7 @@ class GoogleSpreadsheetToArray
 	private $rowAsKey = false;
 	private $colAsKey = false;
 	private $keySwitch = false;
+	private $reverseEntries = false;
 
 	private $filter = [];
 
@@ -69,9 +70,15 @@ class GoogleSpreadsheetToArray
 		}
 	}
 
-	public function setFilterCol(string $col, array $filters)
+
+	public function setFilter(string $type = 'col', string $col, array $filters)
 	{
-		$this->filter['col'][$col] = $filters;
+		$this->filter[$type][$col] = $filters;
+	}
+
+	public function setReverseEntries(bool $boolean)
+	{
+		$this->reverseEntries = $boolean;
 	}
 
 	public function updateUrl()
@@ -96,14 +103,7 @@ class GoogleSpreadsheetToArray
 			return json_decode(file_get_contents($cacheFile));
 		}
 
-		$data = $this->remoteGet($this->url);
-		//echo substr(json_encode((string)$data), 1, -1);
-		/*
-		echo '<pre>';
-		print_r(str_getcsv($data));
-		echo '</pre>';
-		die();
-		*/
+		$data   = $this->remoteGet($this->url);
 		$parsed = $this->parse($data);
 
 		file_put_contents($cacheFile, json_encode($parsed));
@@ -163,6 +163,10 @@ class GoogleSpreadsheetToArray
 					array_shift($full_array[$key]);
 				}
 			}
+		}
+
+		if ($this->reverseEntries) {
+			return array_reverse($full_array);
 		}
 
 		return $full_array;
