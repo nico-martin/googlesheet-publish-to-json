@@ -136,9 +136,9 @@ class GoogleSpreadsheetToArray
 			foreach ($elements as $colIndex => $element) {
 				$colKey = ($this->rowAsKey ? $firstRow[$colIndex] : $colIndex);
 				if ($this->keySwitch) {
-					$full_array[$colKey][$rowKey] = $this->mayBeDoFilter('col', $colKey, $this->mayBeDoFilter('row', $rowKey, $element));
+					$full_array[$colKey][$rowKey] = $this->maybeDoFilter('col', $colKey, $this->maybeDoFilter('row', $rowKey, $element));
 				} else {
-					$full_array[$rowKey][$colKey] = $this->mayBeDoFilter('row', $rowKey, $this->mayBeDoFilter('col', $colKey, $element));
+					$full_array[$rowKey][$colKey] = $this->maybeDoFilter('row', $rowKey, $this->maybeDoFilter('col', $colKey, $element));
 				}
 			}
 
@@ -206,7 +206,7 @@ class GoogleSpreadsheetToArray
 		return $newArray;
 	}
 
-	public function mayBeDoFilter($type, $key, $content)
+	public function maybeDoFilter($type, $key, $content)
 	{
 		if ( ! array_key_exists($type, $this->filter)) {
 			return $content;

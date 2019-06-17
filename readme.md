@@ -71,9 +71,14 @@ $sheet->setFirstRowAsKey(true); // Sets the first row as JSON Key
 $sheet->setFilter('col', 'integer', [ 'intval' ]); // filters the column with the key "integer" by using the "inval();" function
 ```
 
+Endpoint that converts the title to a "key":
+
+https://google-sheets.nico.dev/2PACX-1vSNjZItcRIaqBeN8xIBQNjphBUqgBEOo149_bUjFMLOGsByT0LXqaBF3C-zN44ThrDeEdB5Q_bJsW5B/?row=true&filter-col=title|key
+
 #### Available filters
 
 * md2html - converts markdown to html
+* key - converts any string to lowercase, spaces to minus and removes non-alphanumeric characters
 * [intval](https://www.php.net/manual/en/function.intval.php) - convert to an integer
 * [floatval](https://www.php.net/manual/en/function.floatval.php) - convert to a float
 * [boolval](https://www.php.net/manual/en/function.boolval.php) - convert to boolean
