@@ -100,7 +100,7 @@ class GoogleSpreadsheetToArray
 
 		$cacheFile = "{$this->cacheDir}{$this->sheetKey}-{$this->tableId}-{$this->rowAsKey}-{$this->colAsKey}-{$this->keySwitch}-{$filter}.json";
 		if (file_exists($cacheFile) && filemtime($cacheFile) >= time() - $this->cacheTime) {
-			return json_decode(file_get_contents($cacheFile));
+			return json_decode(file_get_contents($cacheFile), true);
 		}
 
 		$data   = $this->remoteGet($this->url);
